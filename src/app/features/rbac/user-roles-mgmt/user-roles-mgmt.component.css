@@ -1,0 +1,24 @@
+.text-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.role-item {
+    background: var(--bg-card);
+    cursor: pointer;
+}
+
+.role-item:hover {
+    border-color: var(--primary-color) !important;
+    background: rgba(var(--primary-rgb), 0.05);
+}
+
+.role-item.selected {
+    border-color: var(--primary-color) !important;
+    background: rgba(var(--primary-rgb), 0.08);
+}
+
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}

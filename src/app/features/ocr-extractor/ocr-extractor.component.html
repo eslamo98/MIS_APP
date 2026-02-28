@@ -1,0 +1,142 @@
+<div class="ocr-wrapper">
+  <div class="ocr-card">
+    <!-- Header -->
+    <div class="ocr-header">
+      <div class="ocr-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="ocr-title">OCR Extractor</h1>
+        <p class="ocr-subtitle">Drop any image — extract all text instantly</p>
+      </div>
+    </div>
+
+    <!-- Upload Zone -->
+    <div
+      class="drop-zone"
+      [class.dragging]="isDragging"
+      [class.has-image]="imagePreview"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      (click)="fileInput.click()"
+    >
+      <input
+        #fileInput
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        hidden
+      />
+
+      <div class="drop-placeholder" *ngIf="!imagePreview">
+        <div class="upload-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <p class="drop-text">Drag & drop an image here</p>
+        <p class="drop-hint">or <span class="drop-link">browse files</span> · PNG, JPG, WEBP, BMP, TIFF</p>
+      </div>
+
+      <img *ngIf="imagePreview" [src]="imagePreview" alt="Preview" class="image-preview" />
+
+      <button *ngIf="imagePreview" class="clear-btn" (click)="clearImage($event)" title="Remove image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Language Selector -->
+    <div class="options-row">
+      <div class="select-wrap">
+        <label class="option-label">Language</label>
+        <select class="lang-select" [(ngModel)]="selectedLanguage">
+          <option value="eng">English</option>
+          <option value="ara">Arabic</option>
+          <option value="fra">French</option>
+          <option value="deu">German</option>
+          <option value="spa">Spanish</option>
+          <option value="ita">Italian</option>
+          <option value="por">Portuguese</option>
+          <option value="rus">Russian</option>
+          <option value="chi_sim">Chinese (Simplified)</option>
+          <option value="jpn">Japanese</option>
+          <option value="kor">Korean</option>
+          <option value="hin">Hindi</option>
+        </select>
+      </div>
+
+      <button
+        class="extract-btn"
+        [disabled]="!imagePreview || isProcessing"
+        (click)="extractText()"
+      >
+        <span *ngIf="!isProcessing">Extract Text</span>
+        <span *ngIf="isProcessing" class="btn-loading">
+          <span class="spinner"></span> Processing…
+        </span>
+      </button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-wrap" *ngIf="isProcessing">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress"></div>
+      </div>
+      <span class="progress-label">{{ progressStatus }}</span>
+    </div>
+
+    <!-- Result -->
+    <div class="result-section" *ngIf="extractedText !== null && !isProcessing">
+      <div class="result-header">
+        <h2 class="result-title">Extracted Text</h2>
+        <div class="result-actions">
+          <span class="char-count">{{ extractedText.length }} characters · {{ wordCount }} words</span>
+          <button class="action-btn" (click)="copyText()" [class.copied]="copied" title="Copy">
+            <svg *ngIf="!copied" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            <svg *ngIf="copied" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            {{ copied ? 'Copied!' : 'Copy' }}
+          </button>
+          <button class="action-btn" (click)="downloadText()" title="Download">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download
+          </button>
+        </div>
+      </div>
+
+      <div class="result-empty" *ngIf="!extractedText.trim()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <p>No text detected. Try a clearer image or different language.</p>
+      </div>
+
+      <textarea
+        *ngIf="extractedText.trim()"
+        class="result-text"
+        [(ngModel)]="extractedText"
+        rows="10"
+        spellcheck="false"
+      ></textarea>
+    </div>
+
+    <!-- Confidence Score -->
+    <div class="confidence-bar" *ngIf="confidence > 0 && !isProcessing">
+      <span class="conf-label">Confidence</span>
+      <div class="conf-track">
+        <div class="conf-fill" [style.width.%]="confidence" [class.low]="confidence < 50" [class.mid]="confidence >= 50 && confidence < 80" [class.high]="confidence >= 80"></div>
+      </div>
+      <span class="conf-value">{{ confidence | number:'1.0-0' }}%</span>
+    </div>
+  </div>
+</div>

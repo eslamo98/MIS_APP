@@ -1,0 +1,104 @@
+.text-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.permission-item {
+    background: var(--bg-card);
+    cursor: pointer;
+    border: 1px solid var(--border-color) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.permission-item:hover {
+    border-color: var(--primary-color) !important;
+    background: rgba(var(--primary-rgb), 0.05);
+    transform: translateY(-2px);
+}
+
+.permission-item.selected {
+    border-color: var(--primary-color) !important;
+    background: rgba(var(--primary-rgb), 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.permission-item.selected::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 20px 20px 0;
+    border-color: transparent var(--primary-color) transparent transparent;
+}
+
+.text-uppercase {
+    font-size: 0.85rem;
+    letter-spacing: 0.8px;
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.transition-all {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.4);
+}
+
+.card-header {
+    background-color: var(--bg-sidebar) !important;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+.form-select,
+.form-control {
+    background-color: var(--bg-surface) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--border-color) !important;
+    transition: border-color 0.2s;
+}
+
+.form-select:focus,
+.form-control:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(var(--primary-rgb), 0.1) !important;
+}
+
+.form-select option {
+    background-color: var(--bg-surface) !important;
+    color: var(--text-main) !important;
+}
+
+.bg-light-subtle {
+    background-color: var(--bg-surface) !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.module-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.badge-permission {
+    font-size: 0.65rem;
+    padding: 0.25em 0.6em;
+    border-radius: 4px;
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary-color);
+}

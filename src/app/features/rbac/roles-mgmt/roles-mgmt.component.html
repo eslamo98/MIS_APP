@@ -1,0 +1,37 @@
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Page Header -->
+            <div class="mb-4">
+                <h3 class="fw-bold mb-1 text-gradient">{{ t.TITLE[lang()] }}</h3>
+                <p class="text-muted">{{ t.SUBTITLE[lang()] }}</p>
+            </div>
+
+            <!-- Modals -->
+            <app-dynamic-form-modal [isOpen]="isModalOpen()" [fields]="formFields" [gridSections]="gridConfig"
+                [title]="modalTitle" [submitLabel]="submitLabel" (close)="isModalOpen.set(false)"
+                (submit)="onModalSubmit($event)">
+            </app-dynamic-form-modal>
+
+            <!-- Confirmation Modal -->
+            <app-confirmation-modal [isOpen]="isConfirmOpen()" [title]="t.CONFIRM_DELETE_TITLE[lang()]"
+                [message]="confirmMessage" (confirmed)="onDeleteConfirmed()" (cancelled)="isConfirmOpen.set(false)">
+            </app-confirmation-modal>
+
+            <!-- Search Pane -->
+            <app-search-pane [fields]="searchFields" [gridSections]="searchGrid" [moduleName]="Modules.Roles"
+                (search)="handleSearch($event)" (reset)="handleReset()" (create)="handleCreate()"
+                (exportExcel)="handleExport('excel', $event)" (exportWord)="handleExport('word', $event)"
+                (downloadPdf)="handleExport('pdf', $event)">
+            </app-search-pane>
+
+            <!-- Results -->
+            <div class="bg-surface rounded-4 shadow-sm overflow-hidden animate-fade-in mt-4">
+                <app-search-results [data]="roles()" [columns]="columns" [moduleName]="Modules.Roles" [isPaged]="true"
+                    [pagination]="pagination()" (edit)="onEdit($event)" (delete)="onDelete($event)"
+                    (pageChange)="onPageChange($event)">
+                </app-search-results>
+            </div>
+        </div>
+    </div>
+</div>

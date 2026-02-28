@@ -1,0 +1,109 @@
+.table-container {
+    transition: all 0.3s ease;
+}
+
+.table-header {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.animate-row {
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.btn-action {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-edit {
+    color: #6366f1;
+}
+
+.btn-edit:hover {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+    transform: scale(1.1);
+}
+
+.btn-delete {
+    color: #ef4444;
+}
+
+.btn-delete:hover {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    transform: scale(1.1);
+}
+
+.btn-custom {
+    color: #10b981;
+}
+
+.btn-custom:hover {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+    transform: scale(1.1);
+}
+
+.pagination-select {
+    width: auto;
+    background-color: var(--bg-surface);
+    color: var(--text-main);
+}
+
+.page-link {
+    background: var(--bg-surface);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 0.4rem 0.8rem;
+    transition: all 0.2s;
+}
+
+.page-link:hover {
+    background: var(--border-color);
+    color: var(--primary);
+}
+
+.page-item.active .page-link {
+    background: var(--primary-gradient);
+    border-color: transparent;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+}
+
+[data-bs-theme="dark"] .table-header {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.bg-primary-soft {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.smaller {
+    font-size: 0.75rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

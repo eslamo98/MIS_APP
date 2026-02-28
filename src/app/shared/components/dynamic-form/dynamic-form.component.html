@@ -1,0 +1,43 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="dynamic-form">
+    <div class="row g-4">
+        @for (group of groupedSections; track group.section?.key) {
+            <div [class]="group.section ? 'col-12 col-lg-' + group.section.colSpan : 'col-12'">
+                <div class="grid-section-container" [class.has-label]="group.section?.label">
+
+                    @if (group.section?.label) {
+                        <h6 class="section-title text-primary fw-bold mb-3">
+                            {{ group.section?.label }}
+                        </h6>
+                    }
+
+                    <div class="row g-4">
+                        @for (field of group.fields; track field.key) {
+                            <div [class]="field.colSpan === 0 ? 'd-none' : ('col-12 col-md-' + field.colSpan)">
+                                <ng-container [ngComponentOutlet]="field.component"
+                                    [ngComponentOutletInputs]="getComponentInputs(field)">
+                                </ng-container>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (showSubmitButton()) {
+        <div class="mt-5 d-flex justify-content-end">
+            <button type="submit"
+                class="btn btn-primary-gradient px-5 py-3 rounded-pill shadow-lg d-flex align-items-center gap-2"
+                [disabled]="isSubmitting()">
+                @if (!isSubmitting()) {
+                    <span>{{ submitLabel() }}</span>
+                    <i class="fas fa-paper-plane"></i>
+                }
+                @if (isSubmitting()) {
+                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                }
+            </button>
+        </div>
+    }
+</form>

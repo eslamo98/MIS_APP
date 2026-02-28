@@ -1,0 +1,138 @@
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-4">
+                <h3 class="fw-bold mb-1 text-gradient">{{ t.TITLE[lang()] }}</h3>
+                <p class="text-muted">{{ t.SUBTITLE[lang()] }}</p>
+            </div>
+
+            <!-- User Selection -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold text-muted small text-uppercase">
+                                {{ t.SELECT_USER[lang()] }}
+                            </label>
+                            <select class="form-select form-select-lg rounded-3 border-0 bg-light-subtle shadow-sm"
+                                [ngModel]="selectedUserId()" (ngModelChange)="selectedUserId.set($event); onUserChange()">
+                                <option [ngValue]="null">{{ t.CHOOSE_USER[lang()] }}</option>
+                                @for (user of users(); track user.id) {
+                                    <option [value]="user.id">{{ user.userName }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        @if (selectedUserId()) {
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-muted small text-uppercase">
+                                    {{ t.FILTER_MODULES[lang()] }}
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-0 bg-light-subtle">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                    <input type="text"
+                                        class="form-control form-control-lg border-0 bg-light-subtle"
+                                        [placeholder]="t.SEARCH_MODULES[lang()]"
+                                        [ngModel]="moduleSearchTerm()"
+                                        (ngModelChange)="moduleSearchTerm.set($event)">
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-end">
+                                <button class="btn btn-outline-secondary btn-lg rounded-pill px-4"
+                                    (click)="toggleAllModules()">
+                                    <i class="bi bi-check-all me-1"></i>
+                                    {{ allModulesSelected() ? t.DESELECT_ALL[lang()] : t.SELECT_ALL[lang()] }}
+                                </button>
+                                <button class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm"
+                                    (click)="saveChanges()">
+                                    <i class="bi bi-shield-lock-fill me-2"></i>{{ t.SAVE_CHANGES[lang()] }}
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @if (selectedUserId()) {
+                <!-- Permissions Grid -->
+                <div class="row">
+                    @for (module of filteredModules(); track module.id) {
+                        <div class="col-12 mb-4">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden module-card transition-all">
+                                <div class="card-header border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="mb-0 fw-bold">
+                                            <i class="bi bi-folder2-open me-2 text-primary"></i>{{ module.displayName }}
+                                        </h5>
+                                        <small class="text-muted d-block mt-1">
+                                            {{ module.permissions.length }} {{ t.PERMS_AVAILABLE[lang()] }}
+                                        </small>
+                                    </div>
+                                    <div class="form-check form-switch custom-switch">
+                                        <input class="form-check-input" type="checkbox"
+                                            [id]="'module-' + module.id"
+                                            [ngModel]="module.allSelected"
+                                            (ngModelChange)="module.allSelected = $event; toggleModule(module)">
+                                        <label class="form-check-label fw-bold text-primary small text-uppercase"
+                                            [for]="'module-' + module.id"
+                                            style="cursor: pointer; letter-spacing: 0.5px;">
+                                            {{ module.allSelected ? t.UNSELECT_ALL[lang()] : t.SELECT_MODULE[lang()] }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="card-body p-4 bg-transparent">
+                                    <div class="row g-3">
+                                        @for (perm of module.permissions; track perm.id) {
+                                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                                <div class="permission-item p-3 rounded-4 border transition-all"
+                                                    [class.selected]="perm.selected"
+                                                    (click)="togglePermission(module, perm)">
+                                                    <div class="d-flex align-items-start gap-2">
+                                                        <div class="form-check mb-0">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                [id]="'perm-' + perm.id"
+                                                                [ngModel]="perm.selected"
+                                                                (click)="$event.stopPropagation()"
+                                                                (ngModelChange)="perm.selected = $event; updateModuleSelectionState(module)">
+                                                        </div>
+                                                        <div class="flex-grow-1 min-w-0">
+                                                            <label class="form-check-label d-block cursor-pointer mb-0"
+                                                                [for]="'perm-' + perm.id">
+                                                                <span class="fw-bold d-block text-uppercase mb-1 text-truncate">
+                                                                    {{ perm.shortName }}
+                                                                </span>
+                                                                <span class="badge badge-permission">{{ perm.code }}</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (module.permissions.length === 0) {
+                                            <div class="col-12 text-center py-4">
+                                                <i class="bi bi-search text-muted opacity-50 mb-2 d-block"
+                                                    style="font-size: 2rem;"></i>
+                                                <p class="text-muted small mb-0">{{ t.NO_PERMS[lang()] }}</p>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            } @else {
+                <!-- Empty State -->
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="bi bi-person-badge text-muted opacity-25" style="font-size: 5rem;"></i>
+                    </div>
+                    <h4 class="text-muted">{{ t.PROMPT_SELECTION[lang()] }}</h4>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
